@@ -1,0 +1,85 @@
+CREATE TABLE Employees(Employee_id INT IDENTITY(1,1) PRIMARY KEY,
+		       First_Name NVARCHAR(30) NOT NULL,
+		       Last_Name NVARCHAR(30) NOT NULL,
+		       BirthDate DATE NOT NULL);
+
+CREATE TABLE Categories(Category_id INT IDENTITY(1,1) PRIMARY KEY,
+    			Category_Name NVARCHAR(30) NOT NULL);
+
+CREATE TABLE Products(Product_id INT IDENTITY(1,1) PRIMARY KEY,
+    		      Product_Name NVARCHAR(30) NOT NULL,
+                      Category_id INT NOT NULL,
+    		      Price money NOT NULL,
+    		      CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryID) 
+        	      REFERENCES Categories(CategoryID));
+
+INSERT INTO Employees VALUES ('Александр', 'Зорин', '200100213'),
+			     ('Борис', 'Вертихвост', '20020319'),
+			     ('Владимир', 'Городеев', '20040412'),
+			     ('Григорий', 'Маньковский', '20051123'),
+			     ('Давид', 'Маисеев', '19820505');
+
+INSERT INTO Categories (Category_Name) VALUES ('Бакалея'),
+    					      ('Фрукты-овощи'),
+    					      ('Молочные');
+
+INSERT INTO Products (Product_Name, Category_id, Price) VALUES ('Макароны', 1, 3.5),
+    							       ('Хлопья', 1, 4.29),
+    							       ('Мука', 1, 3.99),
+      							       ('Огурец', 2, 5.99),
+      	  	 	 	 	 	 	       ('Томат', 2, 6.79),
+    						               ('Яблоко', 2, 3.79),
+    						               ('Молоко', 3, 2.79),
+    							       ('Кефир', 3, 1.89),
+    					   		       ('Сметана', 3, 2.09);
+-- Задание 1 --
+Go
+CREATE FUNCTION AGE_Employee (@BirthDate DATE)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @Age INT;
+    SET @Age = DATEDIFF(YEAR, @BirthDAte, GETDATE());
+    RETURN @Age
+END;
+GO
+SELECT First_Name, Last_Name, dbo.AGE_Employee(BirthDate) FROM Employees WHERE dbo.AGE_Employee(BirthDate) > 30
+
+
+-- Задание 2 --
+Go
+CREATE FUNCTION Choose_Category (@Category_Name NVARCHAR(30))
+RETURNS TABLE
+AS
+RETURN
+    (SELECT P.Product_id, P.Product_Name, P.Price FROM Products P
+    INNER JOIN Categories C ON P.Category_id = C.Category_id
+    WHERE C.Category_Name = @Category_Name);
+GO
+SELECT Product_id, Product_Name, Price FROM Choose_Category('Бакалея');
+
+
+-- Задание 3 --
+Go
+CREATE FUNCTION Form_Name (@First_Name NVARCHAR(30), @Last_Name NVARCHAR(30))
+RETURNS NVARCHAR(60)
+AS
+BEGIN
+	RETURN @First_Name + ' ' + @Last_Name
+END;
+GO
+SELECT First_Name, Last_Name, dbo.Form_Name(First_Name, Last_Name) AS Full_Name FROM Employees;
+
+
+-- Задание 4 -- 
+Go
+CREATE FUNCTION AvgPrice (@Category_id INT)
+RETURNS INT
+AS
+BEGIN
+    RETURN (SELECT ISNULL(AVG(Price), 0) 
+            FROM Products 
+            WHERE Category_id = @Category_id);
+END;
+GO
+SELECT Category_Name, dbo.AvgPrice(Category_id) AS Average_Price FROM Categories;
