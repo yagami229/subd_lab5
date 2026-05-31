@@ -10,8 +10,8 @@ CREATE TABLE Products(Product_id INT IDENTITY(1,1) PRIMARY KEY,
     		      Product_Name NVARCHAR(30) NOT NULL,
                       Category_id INT NOT NULL,
     		      Price money NOT NULL,
-    		      CONSTRAINT FK_Products_Categories FOREIGN KEY (CategoryID) 
-        	      REFERENCES Categories(CategoryID));
+    		      CONSTRAINT FK_Products_Categories FOREIGN KEY (Category_id) 
+        	      REFERENCES Categories(Category_id));
 
 INSERT INTO Employees VALUES ('Александр', 'Зорин', '200100213'),
 			     ('Борис', 'Вертихвост', '20020319'),
