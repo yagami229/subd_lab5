@@ -32,7 +32,9 @@ INSERT INTO Products (Product_Name, Category_id, Price) VALUES ('Макарон�
     						               ('Молоко', 3, 2.79),
     							       ('Кефир', 3, 1.89),
     					   		       ('Сметана', 3, 2.09);
--- Задание 1 --
+
+
+
 Go
 CREATE FUNCTION AGE_Employee (@BirthDate DATE)
 RETURNS INT
@@ -42,11 +44,11 @@ BEGIN
     SET @Age = DATEDIFF(YEAR, @BirthDAte, GETDATE());
     RETURN @Age
 END;
-GO
+Go
 SELECT First_Name, Last_Name, dbo.AGE_Employee(BirthDate) FROM Employees WHERE dbo.AGE_Employee(BirthDate) > 30
 
 
--- Задание 2 --
+
 Go
 CREATE FUNCTION Choose_Category (@Category_Name NVARCHAR(30))
 RETURNS TABLE
@@ -55,11 +57,11 @@ RETURN
     (SELECT P.Product_id, P.Product_Name, P.Price FROM Products P
     INNER JOIN Categories C ON P.Category_id = C.Category_id
     WHERE C.Category_Name = @Category_Name);
-GO
+Go
 SELECT Product_id, Product_Name, Price FROM Choose_Category('Бакалея');
 
 
--- Задание 3 --
+
 Go
 CREATE FUNCTION Form_Name (@First_Name NVARCHAR(30), @Last_Name NVARCHAR(30))
 RETURNS NVARCHAR(60)
@@ -67,11 +69,11 @@ AS
 BEGIN
 	RETURN @First_Name + ' ' + @Last_Name
 END;
-GO
+Go
 SELECT First_Name, Last_Name, dbo.Form_Name(First_Name, Last_Name) AS Full_Name FROM Employees;
 
 
--- Задание 4 -- 
+
 Go
 CREATE FUNCTION AvgPrice (@Category_id INT)
 RETURNS INT
@@ -81,5 +83,5 @@ BEGIN
             FROM Products 
             WHERE Category_id = @Category_id);
 END;
-GO
+Go
 SELECT Category_Name, dbo.AvgPrice(Category_id) AS Average_Price FROM Categories;
