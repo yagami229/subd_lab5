@@ -76,7 +76,7 @@ SELECT First_Name, Last_Name, dbo.Form_Name(First_Name, Last_Name) AS Full_Name 
 
 Go
 CREATE FUNCTION AvgPrice (@Category_id INT)
-RETURNS INT
+RETURNS Money
 AS
 BEGIN
     RETURN (SELECT ISNULL(AVG(Price), 0) 
